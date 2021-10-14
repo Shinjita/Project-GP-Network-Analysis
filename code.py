@@ -26,7 +26,7 @@ class Module(QgsProcessingAlgorithm):
         self.addParameter(QgsProcessingParameterVectorLayer('SafetyPoints', 'Safety Points', types=[QgsProcessing.TypeVectorPoint], defaultValue=None))
         self.addParameter(QgsProcessingParameterVectorLayer('StudyArea', 'Study Area', types=[QgsProcessing.TypeVectorPolygon], defaultValue=None))
         self.addParameter(QgsProcessingParameterFile('SymbologyFloodArea', 'Symbology - Flood Area', behavior=QgsProcessingParameterFile.File, fileFilter='All Files (*.*)', defaultValue=None))
-        self.addParameter(QgsProcessingParameterFile('SymbologyPath', 'Symbology - Path', behavior=QgsProcessingParameterFile.File, fileFilter='All Files (*.*)', defaultValue=None))
+        self.addParameter(QgsProcessingParameterFile('SymbologyPath', 'Symbology - Final Path', behavior=QgsProcessingParameterFile.File, fileFilter='All Files (*.*)', defaultValue=None))
         self.addParameter(QgsProcessingParameterFile('SymbologyRoadNetwork', 'Symbology - Road Network', behavior=QgsProcessingParameterFile.File, fileFilter='All Files (*.*)', defaultValue=None))
         self.addParameter(QgsProcessingParameterFile('SymbologyStudyArea', 'Symbology - Study Area', behavior=QgsProcessingParameterFile.File, fileFilter='All Files (*.*)', defaultValue=None))
         self.addParameter(QgsProcessingParameterFile('SymbologySafetyPoint', 'Symbology - Safety Point', behavior=QgsProcessingParameterFile.File, fileFilter='All Files (*.*)', defaultValue=None))
@@ -306,7 +306,7 @@ class Module(QgsProcessingAlgorithm):
         # Load layer into project - All addresses
         alg_params = {
             'INPUT': outputs['DistanceToNearestHubPoints']['OUTPUT'],
-            'NAME': 'Addresses with Safety hubs mapped'
+            'NAME': 'Address points in hazard location'
         }
         outputs['LoadLayerIntoProjectAllAddresses'] = processing.run('native:loadlayer', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
