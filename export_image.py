@@ -1,7 +1,8 @@
-from PyQt5 import QtGui, QTimer
+from PyQt5 import QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from qgis.utils import iface
 import time
-from qgis.core import QgsProject, QgsComposerModel 
+from qgis.core import QgsProject
 
 directory = 'D:/Git_repo/Project-GP-Network-Analysis/output/'
 root = QgsProject.instance().layerTreeRoot()
@@ -64,4 +65,4 @@ def printImage(user_input):
 print('1. For the output road image: 0\n 2. For entire study area: 1')
 user_input = 0
 f = printImage(user_input)
-QTimer.singleShot(1000, exportMap(f))
+exportMap(f)
