@@ -22,3 +22,4 @@ To identify the best path and effectively automate the process using QGIS Python
   b. Entire study area
   Additionally, the view on the QGIS Map Canvas is also exported as an image in the output folder
 ![image](https://user-images.githubusercontent.com/80443493/137458386-f89b5f60-569c-443f-9f1a-78c0fbb5b4cd.png)
+
