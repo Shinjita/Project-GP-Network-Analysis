@@ -5,7 +5,7 @@ To identify the best path and effectively automate the process using QGIS Python
 1. Open QGIS and open the code.py file using QGIS Scripts
 ![image](https://user-images.githubusercontent.com/80443493/137457987-38bdd4da-ce5e-4514-8abe-0661a9cf565b.png)
 
-2. Run the script
+2. Run the script                                   
 ![image](https://user-images.githubusercontent.com/80443493/137458045-f55cde87-6888-4749-b781-664f4e4d6079.png)
 
 3. Input path to all the files (shapefile and qml) and provide the following details:
