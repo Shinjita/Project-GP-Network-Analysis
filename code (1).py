@@ -1,3 +1,4 @@
+#importing libraries
 from qgis.core import QgsProcessing, QgsRasterLayer, QgsProject
 from qgis.core import QgsProcessingAlgorithm
 from qgis.core import QgsProcessingMultiStepFeedback
@@ -7,12 +8,13 @@ from qgis.core import QgsProcessingParameterNumber
 from qgis.core import QgsProcessingParameterFile
 import processing
 
-
+#defining url for OSM basemap
 urlWithParams = 'type=xyz&url=https://tile.openstreetmap.org/{z}/{x}/{y}.png&zmax=19&zmin=0&crs=EPSG3857'
+#using QgsRasterLayer function to load the OSM basemap
 rlayer = QgsRasterLayer(urlWithParams, 'OpenStreetMap', 'wms')  
 
-if rlayer.isValid():
-    QgsProject.instance().addMapLayer(rlayer)
+if rlayer.isValid(): #checking whether the basemap output is valid or not
+    QgsProject.instance().addMapLayer(rlayer) #if the output is valid, add it to the QGIS map canvas
 
 class Module(QgsProcessingAlgorithm):
 
@@ -46,6 +48,7 @@ class Module(QgsProcessingAlgorithm):
             'INPUT': parameters['StudyArea'],
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
+        #Attempts to create a valid representation of a given invalid geometry without losing any of the input vertices
         outputs['FixGeometries'] = processing.run('native:fixgeometries', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(1)
@@ -54,12 +57,14 @@ class Module(QgsProcessingAlgorithm):
 
         # Extract by attribute - safety point
         alg_params = {
-            'FIELD': 'NAME',
+            'FIELD': 'NAME', #the column on which the operator will compare the value
             'INPUT': parameters['SafetyPoints'],
             'OPERATOR': 0,  # =
             'VALUE': parameters['SafetyPointSelectorbyName'],
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
+        #Creates two vector layers from an input layer: one will contain only matching features while the second will contain all the non-matching features.
+        #Output contains only the matched layer
         outputs['ExtractByAttributeSafetyPoint'] = processing.run('native:extractbyattribute', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(2)
@@ -70,9 +75,10 @@ class Module(QgsProcessingAlgorithm):
         alg_params = {
             'CRS': 'ProjectCrs',
             'INPUT': outputs['ExtractByAttributeSafetyPoint']['OUTPUT'],
-            'PREFIX': '',
+            'PREFIX': '', #prefix for naming the added columns
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
+
         outputs['AddXyFieldsToLayer'] = processing.run('native:addxyfields', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(3)
@@ -92,7 +98,7 @@ class Module(QgsProcessingAlgorithm):
 
         # Buffer
         alg_params = {
-            'DISSOLVE': False,
+            'DISSOLVE': False, #dissolve type
             'DISTANCE': parameters['FloodBufferZonem'],
             'END_CAP_STYLE': 0,  # Round
             'INPUT': parameters['FloodArea'],
@@ -101,6 +107,7 @@ class Module(QgsProcessingAlgorithm):
             'SEGMENTS': 5,
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
+        #This algorithm computes a buffer area for all the features in an input layer, using a fixed or dynamic distance.
         outputs['Buffer'] = processing.run('native:buffer', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(5)
@@ -124,6 +131,8 @@ class Module(QgsProcessingAlgorithm):
             'OVERLAY': outputs['FixGeometries']['OUTPUT'],
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
+        #Clips a vector layer using the features of an additional polygon layer.
+        #Only the parts of the features in the input layer that fall within the polygons of the overlay layer will be added to the resulting layer.
         outputs['ClipFloodArea'] = processing.run('native:clip', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(7)
@@ -158,6 +167,7 @@ class Module(QgsProcessingAlgorithm):
             'INPUT': outputs['LoadLayerIntoProjectStudyArea']['OUTPUT'],
             'STYLE': parameters['SymbologyStudyArea']
         }
+        #Applies a provided style to a layer. The style must be defined in a QML file.
         outputs['SetLayerStyle'] = processing.run('native:setlayerstyle', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(10)
@@ -228,6 +238,7 @@ class Module(QgsProcessingAlgorithm):
             'UNIT': 3,  # Kilometers
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
+        #Calculates for point features distances to their nearest features in the same layer or in another layer.
         outputs['DistanceToNearestHubPoints'] = processing.run('qgis:distancetonearesthubpoints', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(16)
@@ -288,15 +299,16 @@ class Module(QgsProcessingAlgorithm):
             'DIRECTION_FIELD': '',
             'END_POINT': parameters['CoordinateforSafetyPoint'],
             'INPUT': outputs['ClipRoad']['OUTPUT'],
-            'SPEED_FIELD': '',
+            'SPEED_FIELD': '', #if each individual road line has a speed the model can take it into consideration and ignore the default speed parameter
             'START_POINTS': outputs['ExtractByAttributeSelectedAddressesForInputSafetyHub']['OUTPUT'],
-            'STRATEGY': 1,  # Fastest
+            'STRATEGY': 1,  # 0:Shortest | 1:Fastest
             'TOLERANCE': 0,
             'VALUE_BACKWARD': '',
             'VALUE_BOTH': '',
             'VALUE_FORWARD': '',
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
+        #Calculating the shortest or fastest distance between two points
         outputs['ShortestPathLayerToPoint'] = processing.run('native:shortestpathlayertopoint', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
 
         feedback.setCurrentStep(21)
@@ -359,6 +371,7 @@ class Module(QgsProcessingAlgorithm):
         return 'Module'
 
     def displayName(self):
+        #naming the tool
         return 'Network Analysis: Safety Point Identification'
 
     def group(self):
