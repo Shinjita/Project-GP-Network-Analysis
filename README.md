@@ -1,4 +1,4 @@
-# Project-GP-Network-Analysis
+# Project GP: Network Analysis
 To identify the best path and effectively automate the process using QGIS Python to create and reiterate evacuation paths during the flooding to save time and lives.
 
 **How to run the codes**
@@ -11,7 +11,7 @@ To identify the best path and effectively automate the process using QGIS Python
 3. Input path to all the files (shapefile and qml) and provide the following details:
   a. Buffer distance value
   b. Selected safety point name
-  c. Selected safety point latitude and longitude
+  c. Selected safety point latitude and longitude                                             
 ![image](https://user-images.githubusercontent.com/80443493/137458213-41af22e8-dfb5-4f3f-88ab-f726765e1cfa.png)
 
 4. Once the desired layers are loaded, run the export_image.py code using the Python Console
