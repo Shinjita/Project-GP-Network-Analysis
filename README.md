@@ -8,9 +8,9 @@ To identify the best path and effectively automate the process using QGIS Python
 2. Run the script                                   
 ![image](https://user-images.githubusercontent.com/80443493/137458045-f55cde87-6888-4749-b781-664f4e4d6079.png)
 
-3. Input path to all the files (shapefile and qml) and provide the following details:
-  a. Buffer distance value
-  b. Selected safety point name
+3. Input path to all the files (shapefile and qml) and provide the following details: <br/>
+  a. Buffer distance value <br/>
+  b. Selected safety point name <br/>
   c. Selected safety point latitude and longitude                                             
 ![image](https://user-images.githubusercontent.com/80443493/137458213-41af22e8-dfb5-4f3f-88ab-f726765e1cfa.png)
 
