@@ -6,7 +6,8 @@ import time
 from qgis.core import QgsProject
 
 #defining directory to the output folder
-directory = 'D:/Work/FloData Analytics/Clients/RMIT Shinjita Das/Module 5/Images/'
+#change according to users file path
+directory = 'D:/Git_repo/Project-GP-Network-Analysis/output/'
 
 def reorder_layers(layer, node):
     root = QgsProject.instance().layerTreeRoot()
